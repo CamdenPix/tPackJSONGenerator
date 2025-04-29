@@ -1,0 +1,29 @@
+table, tr{
+    border: 0px solid;
+    text-align: center;
+    justify-content: center;
+    width: 90%;
+}
+td, th{
+    padding-left: 15%;
+    padding-right: 15%;
+}
+
+.items{
+    text-align: left;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.items > * > *{
+    margin: 2px;
+}
+
+.top{
+    padding: 10px;
+}
+
+.bottomButton{
+    text-align: center;
+    padding: 5px;
+}
