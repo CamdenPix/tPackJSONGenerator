@@ -64,7 +64,7 @@ export default function ProjectileComponent({index, properties, setProperties, i
 
     function changeItemList({itemSource, itemName}){
         const updateArray = [...itemList];
-        updateArray[index] = {source: itemSource, name: itemName};
+        updateArray[index] = {source: itemSource, name: itemName, component: "Projectile"};
         setItemList(updateArray);
     }
 

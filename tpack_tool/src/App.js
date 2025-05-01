@@ -1,16 +1,14 @@
 import './styles/App.css';
 import { useState } from 'react';
-import JSZip from 'jszip';
-import FileSaver from 'file-saver';
 import ItemChange from './components/ItemComponent.jsx';
 import ProjectileChange from './components/ProjectileComponent.jsx';
 import NPCChange from './components/NPCComponent.jsx';
 import RecipeChange from './components/RecipeComponent.jsx';
-import toJSON from './JSONfunctions.js';
+import Populate from './components/ChangeList.jsx';
+import Download from './JSONfunctions.js';
 
 
-
-function App() {
+export default function App() {
     const [openIndex, setOpenIndex] = useState(null);
     const [properties_, setProperties_] = useState([]);
     const [itemList, setItemList] =  useState([]);
@@ -33,64 +31,31 @@ function App() {
                 defaultValue = "ERROR"
                 break;
         }
-        setProperties_([...properties_, [{property: "Damage", operation: "+", value: 0}]]);
+        
         if(componentType === "Recipe"){
-            setItemList([...itemList, {component: componentType, 
-                conditions:[{target: "Result", source: "Terraria", item: "Zenith", number: 1}]}]);
-        }else{
+            setItemList([...itemList, {component: componentType, conditions:[{
+                target: "Result", 
+                source: "Terraria", 
+                item: "Zenith", 
+                number: 1
+            }]}]);
+            setProperties_([...properties_, [{
+                operation: "Add", 
+                target: "Ingredient", 
+                source: "Terraria", 
+                item: "Slime", 
+                value: 0
+            }]]);
+        } else {
             setItemList([...itemList, {source: "Terraria", name:defaultValue, component: componentType}]);
+            setProperties_([...properties_, [{property: "Damage", operation: "+", value: 0}]]);
         }
         setOpenIndex(properties_.length);
     }
 
-    function closeOpenIndex(){
-        setOpenIndex(null); 
-    }
-
-    function openChange(i){
-        setOpenIndex(i);
-    }
-
-    function displayOpenOrClose(pos){
-        if(pos === openIndex){
-            return(
-                <p onClick={closeOpenIndex}>close</p>
-            )
-        }
-        else{
-            return(
-                <p onClick={() => openChange(pos)}>open</p>
-            )
-        }
-    }
-
-    function Populate({pos}){
-        
-        function IsRecipeHandler(){
-            if(itemList[pos].component==="Recipe"){
-                return(
-                    <h3>{itemList[pos].conditions[0].item} {itemList[pos].component} Change</h3>
-                )
-            }else{
-                return(
-                    <h3>{itemList[pos].name} {itemList[pos].component} Change</h3>
-                )
-            }
-        }
-
-        return(
-            <div className="ListItem">
-                {IsRecipeHandler()}
-                <div className="OpenAndClose">
-                    {displayOpenOrClose(pos)}
-                </div>
-            </div>
-        )
-    }
-
     const changes = [];
     for(let i = 0; i < properties_.length; i++){
-        changes.push(<Populate pos={i} key={i} />);
+        changes.push(<Populate pos={i} key={i} openIndex={openIndex} setOpenIndex={setOpenIndex} itemList={itemList}/>);
         if(i === openIndex){
             switch (itemList[i].component) {
                 case "Item":
@@ -152,40 +117,6 @@ function App() {
         setComponentType(value);
     }
 
-    function download(){
-        const files = [];
-        for(let i = 0; i < itemList.length; i++){
-            files.push(toJSON(itemList[i], properties_[i]));
-        }
-
-
-        const zip = new JSZip();
-        for(let i = 0; i < itemList.length; i++){
-            let fileType = "";
-            switch (itemList[i].component) {
-                case "Item":
-                    fileType = "itemmod";
-                    break;
-                case "Projectile":
-                    fileType = "projectilemod";
-                    break;
-                case "NPC":
-                    fileType = "npcmod";
-                    break;
-                case "Recipe":
-                    fileType = "recipemod";
-                    break;
-                default:
-                    fileType = "ERROR"
-                    break;
-            }
-            zip.file(`${itemList[i].component}_${itemList[i].name}.${fileType}.json`, files[i]);
-        }
-        zip.generateAsync({ type: "blob" }).then(function (content) {
-            FileSaver.saveAs(content, "download.zip");
-        });
-    }
-
     return (
         <div className="App">
             <header className="App-header">
@@ -203,9 +134,7 @@ function App() {
                     <option>Recipe</option>
                 </select>
             </div>
-            <button className="StickyButton" onClick={() => download()}>Export</button>
+            <button className="StickyButton" onClick={() => Download(itemList, properties_)}>Export</button>
         </div>
     );
 }
-
-export default App;

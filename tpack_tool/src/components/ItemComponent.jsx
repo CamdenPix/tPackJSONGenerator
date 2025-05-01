@@ -85,7 +85,7 @@ export default function ItemComponent({status, index, properties, setProperties,
 
     function changeItemList({itemSource, itemName}){
         const updateArray = [...itemList];
-        updateArray[index] = {source: itemSource, name: itemName};
+        updateArray[index] = {source: itemSource, name: itemName, component: "Item"};
         setItemList(updateArray);
     }
 

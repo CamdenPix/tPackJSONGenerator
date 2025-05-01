@@ -71,7 +71,7 @@ function Property({index, propData, onChange}){
             </select>
             <select name="target" value={target} onChange={handleChange}>
                 <option value="Ingredient">Ingredient</option>
-                <option value="Group">Group</option>
+                <option value="RecipeGroup">Group</option>
                 <option value="Tile">Tile</option>
                 {operation === "Change" && <option value="Result">Result</option>}
             </select>

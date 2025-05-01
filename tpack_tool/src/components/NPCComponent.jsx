@@ -72,7 +72,7 @@ export default function NPCComponent({status, index, properties, setProperties, 
 
     function changeItemList({itemSource, itemName}){
         const updateArray = [...itemList];
-        updateArray[index] = {source: itemSource, name: itemName};
+        updateArray[index] = {source: itemSource, name: itemName, component: "NPC"};
         setItemList(updateArray);
     }
 
