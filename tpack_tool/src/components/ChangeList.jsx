@@ -7,7 +7,7 @@ function displayOpenOrClose(pos, openIndex, setOpenIndex){
     }
 }
 
-export default function Populate({pos, openIndex, setOpenIndex, itemList}){
+export default function Populate({pos, openIndex, setOpenIndex, itemList, setItemList, properties, setProperties}){
     
     function IsRecipeHandler(){
         if(itemList[pos].component==="Recipe"){
@@ -21,11 +21,30 @@ export default function Populate({pos, openIndex, setOpenIndex, itemList}){
         }
     }
 
+    function handleClick(e){
+        const newItemList = [...itemList];
+        const newProperties = [...properties];
+
+        newItemList.splice(pos, 1);
+        newProperties.splice(pos, 1);
+        //looks and feels inefficient, but needed for React to rerender
+        setItemList(newItemList);
+        setProperties(newProperties);
+        
+        if(pos === openIndex){
+            setOpenIndex(null);
+        } else if (pos < openIndex) {
+            setOpenIndex(openIndex - 1);
+        }
+    }
+
     return(
         <div className="ListItem">
             {IsRecipeHandler()}
             <div className="OpenAndClose">
                 {displayOpenOrClose(pos, openIndex, setOpenIndex)}
+                <img src="/images/trash.png" alt="Delete Icon" width="25" height="25" className="Trash"
+                    onClick={() => handleClick()}/>
             </div>
         </div>
     )

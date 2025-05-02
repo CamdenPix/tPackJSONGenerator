@@ -10,7 +10,7 @@ import Download from './JSONfunctions.js';
 
 export default function App() {
     const [openIndex, setOpenIndex] = useState(null);
-    const [properties_, setProperties_] = useState([]);
+    const [properties, setProperties] = useState([]);
     const [itemList, setItemList] =  useState([]);
     const [componentType, setComponentType] = useState("Item");
 
@@ -39,7 +39,7 @@ export default function App() {
                 item: "Zenith", 
                 number: 1
             }]}]);
-            setProperties_([...properties_, [{
+            setProperties([...properties, [{
                 operation: "Add", 
                 target: "Ingredient", 
                 source: "Terraria", 
@@ -48,14 +48,16 @@ export default function App() {
             }]]);
         } else {
             setItemList([...itemList, {source: "Terraria", name:defaultValue, component: componentType}]);
-            setProperties_([...properties_, [{property: "Damage", operation: "+", value: 0}]]);
+            setProperties([...properties, [{property: "Damage", operation: "+", value: 0}]]);
         }
-        setOpenIndex(properties_.length);
+        setOpenIndex(properties.length);
     }
 
     const changes = [];
-    for(let i = 0; i < properties_.length; i++){
-        changes.push(<Populate pos={i} key={i} openIndex={openIndex} setOpenIndex={setOpenIndex} itemList={itemList}/>);
+    for(let i = 0; i < properties.length; i++){
+        changes.push(<Populate pos={i} key={i} openIndex={openIndex} 
+            setOpenIndex={setOpenIndex} itemList={itemList} setItemList={setItemList}
+            properties={properties} setProperties={setProperties}/>);
         if(i === openIndex){
             switch (itemList[i].component) {
                 case "Item":
@@ -63,8 +65,8 @@ export default function App() {
                         key={`o${i}`} 
                         status={false} 
                         index={i} 
-                        properties={properties_} 
-                        setProperties={setProperties_}
+                        properties={properties} 
+                        setProperties={setProperties}
                         itemList={itemList}
                         setItemList={setItemList}/>);
                 break;
@@ -72,8 +74,8 @@ export default function App() {
                 changes.push(<ProjectileChange 
                     key={`o${i}`} 
                     index={i} 
-                    properties={properties_} 
-                    setProperties={setProperties_}
+                    properties={properties} 
+                    setProperties={setProperties}
                     itemList={itemList}
                     setItemList={setItemList}/>);
                 break;
@@ -82,8 +84,8 @@ export default function App() {
                     key={`o${i}`} 
                     status={false} 
                     index={i} 
-                    properties={properties_} 
-                    setProperties={setProperties_}
+                    properties={properties} 
+                    setProperties={setProperties}
                     itemList={itemList}
                     setItemList={setItemList}/>);
                 break;
@@ -92,8 +94,8 @@ export default function App() {
                     key={`o${i}`} 
                     status={false} 
                     index={i} 
-                    properties={properties_} 
-                    setProperties={setProperties_}
+                    properties={properties} 
+                    setProperties={setProperties}
                     itemList={itemList}
                     setItemList={setItemList}/>);
                 break;
@@ -102,13 +104,12 @@ export default function App() {
                     key={`o${i}`} 
                     status={false} 
                     index={i} 
-                    properties={properties_} 
-                    setProperties={setProperties_}
+                    properties={properties} 
+                    setProperties={setProperties}
                     itemList={itemList}
                     setItemList={setItemList}/>);
                 break;
-            }
-            
+            }          
         }
     }
 
@@ -134,7 +135,7 @@ export default function App() {
                     <option>Recipe</option>
                 </select>
             </div>
-            <button className="StickyButton" onClick={() => Download(itemList, properties_)}>Export</button>
+            <button className="StickyButton" onClick={() => Download(itemList, properties)}>Export</button>
         </div>
     );
 }

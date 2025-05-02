@@ -37,6 +37,11 @@
   flex-direction: row;
   color: #5684de;
   padding: 5px;
+  align-items: center;
+}
+
+.Trash{
+    padding-left: 10px;
 }
 
 .Selection{
