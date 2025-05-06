@@ -145,7 +145,7 @@ function RecipeToJson(itemData, propDataArr){
         "Changes":{
 ${changes}
         },
-        "Criteria": "All"
+        "Criteria": "${itemData.criteria}"
 }`);
 }
 

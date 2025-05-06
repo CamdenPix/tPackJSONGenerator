@@ -33,7 +33,7 @@ export default function App() {
         }
         
         if(componentType === "Recipe"){
-            setItemList([...itemList, {component: componentType, conditions:[{
+            setItemList([...itemList, {component: componentType, criteria:"All", conditions:[{
                 target: "Result", 
                 source: "Terraria", 
                 item: "Zenith", 

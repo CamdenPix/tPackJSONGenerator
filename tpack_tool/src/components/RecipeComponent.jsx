@@ -174,6 +174,13 @@ export default function RecipeComponent({status, index, properties, setPropertie
         newConditions[index].conditions.splice(key, 1);
         setItemList(newConditions);
     }
+
+    function handleRadio(e){
+        const {value} = e.target;
+        const newItemList = [...itemList];
+        newItemList[index].criteria = value;
+        setItemList(newItemList);
+    }
     
     const conditionRows = [];
     for(let i = 0; i < itemList[index].conditions.length; i++){
@@ -195,6 +202,15 @@ export default function RecipeComponent({status, index, properties, setPropertie
 
     return(
     <div>
+        <div className="ListItem">
+            <p>Criteria: </p>
+            <input type="radio" id="all" name="criteria" value="All" 
+                checked={itemList[index].criteria==="All"} onChange={handleRadio}/>
+            <label for="all">All</label>
+            <input type="radio" id="any" name="criteria" value="Any" 
+                checked={itemList[index].criteria==="Any"} onChange={handleRadio}/>
+            <label for="any">Any</label>
+        </div>
         <div className="items">
             {conditionRows}
             <div className="bottomButton">
