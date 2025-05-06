@@ -56,7 +56,7 @@ function Property({propKey, index, calamityStatus, properties, setProperties, pr
             </select>
             &emsp;
             <input type="number" name="value" value={value} onChange={handleChange}/>
-            <button>Delete</button>
+            <button onClick={() => deleteProperties(propKey, index, properties, setProperties)}>Delete</button>
             </label>
         </div>
     );

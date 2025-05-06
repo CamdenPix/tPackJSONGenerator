@@ -5,7 +5,7 @@ import '../styles/operations.css';
  * conditionData is an object with the data
  * onChange is the function called to mutate the useState
  */
-function Condition({index, conditionData, onChange}){
+function Condition({index, conditionData, onChange, deleteElement}){
     const { target, source, item, number } = conditionData;
 
     function handleChange(e){
@@ -31,7 +31,7 @@ function Condition({index, conditionData, onChange}){
             <input type="text" name="source" value={source} onChange={handleChange}/>
             <input type="text" name="item" value={item} onChange={handleChange}/>
             <input type="number" name="value" value={number} onChange={handleChange}/>
-            <button>Delete</button>
+            <button onClick={()=>deleteElement({key:index})}>Delete</button>
             </label>
         </div>
     )
@@ -44,7 +44,7 @@ function Condition({index, conditionData, onChange}){
  * propData is an object with the data
  * onChange is the function called to mutate the useState
  */
-function Property({index, propData, onChange}){
+function Property({index, propData, onChange, deleteElement}){
     const { operation, target, source, item, source2, item2, value } = propData;
 
     function handleChange(e){
@@ -84,7 +84,7 @@ function Property({index, propData, onChange}){
                 </>
             )}
             <input type="number" name="value" value={value} onChange={handleChange}/>
-            <button>Delete</button>
+            <button onClick={()=>deleteElement({key:index})}>Delete</button>
             </label>
         </div>
     );
@@ -138,6 +138,12 @@ export default function RecipeComponent({status, index, properties, setPropertie
             changeNormalProperty({key, operation_, target_, source_, item_, value_})
         }
     }
+    
+    function deleteProperty({key}){
+        const newProperties = [...properties];
+        newProperties[index].splice(key, 1);
+        setProperties(newProperties);
+    }
 
     function addConditions() {
         const updateArray = [...itemList];
@@ -162,16 +168,29 @@ export default function RecipeComponent({status, index, properties, setPropertie
         };
         setItemList(updateArray);
     }
+
+    function deleteCondition({key}){
+        const newConditions = [...itemList];
+        newConditions[index].conditions.splice(key, 1);
+        setItemList(newConditions);
+    }
     
+    const conditionRows = [];
+    for(let i = 0; i < itemList[index].conditions.length; i++){
+        conditionRows.push(<Condition 
+            key={i} index={i} 
+            conditionData={itemList[index].conditions[i]} 
+            onChange={changeConditions}
+            deleteElement={deleteCondition}/>)
+    }
 
     const propRows = [];
     for(let i = 0; i < properties[index].length; i++){
-        propRows.push(<Property key={i} index={i} propData={properties[index][i]} onChange={changeProperty} />);
-    }
-
-    const conditionRows = [];
-    for(let i = 0; i < itemList[index].conditions.length; i++){
-        conditionRows.push(<Condition key={i} index={i} conditionData={itemList[index].conditions[i]} onChange={changeConditions}/>)
+        propRows.push(<Property 
+            key={i} index={i} 
+            propData={properties[index][i]} 
+            onChange={changeProperty}
+            deleteElement={deleteProperty}/>);
     }
 
     return(
