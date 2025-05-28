@@ -217,7 +217,13 @@ export default function RecipeComponent({status, index, properties, setPropertie
                 <button onClick={addConditions}>Add Condition</button>
             </div>
         </div>
-        <h3 className="items">Operation Target Source Item Amount</h3>
+        <h3 className="items">
+            <span>Operation</span>
+            <span className="label">Target</span>
+            <span className="label">Source</span>
+            <span className="label">Item</span>
+            <span className="label">Amount</span>
+        </h3>
         {propRows}
         <div className="bottomButton">
             <button onClick={addProperties}>Add Property</button>

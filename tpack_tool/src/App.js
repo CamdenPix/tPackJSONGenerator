@@ -4,6 +4,7 @@ import ItemChange from './components/ItemComponent.jsx';
 import ProjectileChange from './components/ProjectileComponent.jsx';
 import NPCChange from './components/NPCComponent.jsx';
 import RecipeChange from './components/RecipeComponent.jsx';
+import AddRecipe from './components/AddRecipeComponent.jsx';
 import Populate from './components/ChangeList.jsx';
 import Download from './JSONfunctions.js';
 
@@ -45,6 +46,14 @@ export default function App() {
                 source: "Terraria", 
                 item: "Slime", 
                 value: 0
+            }]]);
+        } else if (componentType === "AddRecipe") {
+            setItemList([...itemList, {component: componentType, source: "Terraria", name: "Zenith", value: 1}]);
+            setProperties([...properties, [{
+                target: "Ingredient", 
+                source: "Terraria", 
+                item: "Slime", 
+                value: 1
             }]]);
         } else {
             setItemList([...itemList, {source: "Terraria", name:defaultValue, component: componentType}]);
@@ -99,6 +108,16 @@ export default function App() {
                     itemList={itemList}
                     setItemList={setItemList}/>);
                 break;
+            case "AddRecipe":
+                changes.push(<AddRecipe 
+                    key={`o${i}`} 
+                    status={false} 
+                    index={i} 
+                    properties={properties} 
+                    setProperties={setProperties}
+                    itemList={itemList}
+                    setItemList={setItemList}/>);
+                break;
             default:
                 changes.push(<ItemChange 
                     key={`o${i}`} 
@@ -133,6 +152,7 @@ export default function App() {
                     <option>Projectile</option>
                     <option>NPC</option>
                     <option>Recipe</option>
+                    <option>AddRecipe</option>
                 </select>
             </div>
             <button className="StickyButton" onClick={() => Download(itemList, properties)}>Export</button>

@@ -19,7 +19,7 @@ function ToJSON(item, propDataArr){
 }
 
 //Duplicate keys are needed, so I'll need to generate raw text instead, yayyy
-function RecipeToJson(itemData, propDataArr){
+function RecipeToJSON(itemData, propDataArr){
     let conditions = "";
     let changes = "";
 
@@ -149,13 +149,45 @@ ${changes}
 }`);
 }
 
+function AddRecipeToJSON(itemData, propDataArr){
+    let result = "";
+    let changes = "";
+
+    result = `"Result:":{"Item": "${itemData.source}/${itemData.name}", "Count": ${itemData.value}},`;
+    propDataArr.forEach((change, index) => {
+        switch (change.target) {
+            case "Ingredient":
+                changes += `    "Ingredient": {"Item": "${change.source}/${change.item}", "Count": ${change.value}}`;
+                break;
+            case "GroupIngredient":
+                changes += `    "GroupIngredient": {"Group": "${change.item}", "Count": ${change.value}}`;
+                break;
+            case "Tile":
+                changes += `    "Tile": "${change.source}/${change.item}"`;
+                break;
+            default:
+                break;
+        }
+        if(index !== (propDataArr.length-1)){
+            changes += ",\n";
+        }
+    });
+
+    return `{
+    ${result}
+${changes}
+}`
+}
+
 export default function Download(itemList, properties){
     const files = [];
     for(let i = 0; i < itemList.length; i++){
-        if(itemList[i].component !== "Recipe") {
-            files.push(ToJSON(itemList[i], properties[i]));
+        if(itemList[i].component === "Recipe"){
+            files.push(RecipeToJSON(itemList[i], properties[i]));
+        } else if(itemList[i].component === "AddRecipe"){
+            files.push(AddRecipeToJSON(itemList[i], properties[i]));
         } else {
-            files.push(RecipeToJson(itemList[i], properties[i]));
+            files.push(ToJSON(itemList[i], properties[i]));
         }
     }
 
@@ -174,6 +206,9 @@ export default function Download(itemList, properties){
                 break;
             case "Recipe":
                 fileType = "recipemod";
+                break;
+            case "AddRecipe":
+                fileType = "recipebuilder";
                 break;
             default:
                 fileType = "ERROR"

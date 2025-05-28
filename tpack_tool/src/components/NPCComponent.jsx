@@ -96,7 +96,11 @@ export default function NPCComponent({status, index, properties, setProperties, 
             Item Name: <input type="text" name="itemName" onChange={handleItemChange} defaultValue={itemList[index].name}/>
             </label>
         </div>
-        <h3 className="items">Property&emsp;Operations&emsp;Value</h3>
+        <h3 className="items">
+            <span className="label">Property</span>
+            <span className="label">Operations</span>
+            <span className="label">Value</span>
+        </h3>
         {rows}
         <div className="bottomButton">
             <button onClick={()=>addProperties(index, properties, setProperties)}>Add Property</button>
