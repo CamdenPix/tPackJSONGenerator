@@ -62,3 +62,10 @@
     font-size: 40px;
     font-family: Georgia, 'Times New Roman', Times, serif;
 }
+
+.StatusBox{
+    position: fixed;
+    top: 25%;
+    right: 10%;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}

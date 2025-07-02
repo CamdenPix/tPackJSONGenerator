@@ -1,5 +1,6 @@
 import JSZip from 'jszip';
 import FileSaver from 'file-saver';
+const CalamityProperties = ["MaxCharge", "ChargePerUse", "ChargePerAltUse", "DamageReduction"];
 
 //Item, NPC, and Projectile
 function ToJSON(item, propDataArr){
@@ -16,6 +17,54 @@ function ToJSON(item, propDataArr){
     }
 
     return JSON.stringify(jsonObject);
+}
+
+//Object list is the actual list passed in, not with what the component is
+function ObjectToJSON(objectList, propDataArr){
+    let items = "";
+    let modifications = "";
+
+    objectList.forEach(object => {
+        items += `\t"Item":"${object.source}/${object.name}",\n`;
+    });
+    
+    const changes = {};
+    changes["Terraria"] = [];
+    changes["CalamityMod"] = [];
+    propDataArr.forEach(change => {
+        const { property, operation, value } = change;
+        if(CalamityProperties.includes(property)){
+            changes["CalamityMod"].push({property, operation, value});
+        }
+        else{
+            changes["Terraria"].push({property, operation, value});
+        }
+    });
+
+    modifications += ` \t"Changes":{\n\t\t"Terraria":{\n`;
+    changes["Terraria"].forEach((change, index) => {
+        modifications += `\t\t\t"${change.property}":"${change.operation}${change.value}"`;
+        if(index < changes["Terraria"].length-1){
+            modifications += ",";
+        }
+        modifications += "\n";
+    });
+    modifications += ` \t\t}`
+    if(changes["CalamityMod"] !== undefined){
+        modifications += `,\n\t\t"CalamityMod":{\n`
+
+        changes["CalamityMod"].forEach((change, index) => {
+            modifications += `\t\t\t"${change.property}":"${change.operation}${change.value}"`;
+            if(index < changes["CalamityMod"].length-1){
+                modifications += ",";
+            }
+        modifications += "\n";
+        });
+        modifications += ` \t\t}\n`;
+    }
+    modifications += "\t}";
+
+    return `{\n${items}\n${modifications}\n}`;
 }
 
 //Duplicate keys are needed, so I'll need to generate raw text instead, yayyy
@@ -187,7 +236,7 @@ export default function Download(itemList, properties){
         } else if(itemList[i].component === "AddRecipe"){
             files.push(AddRecipeToJSON(itemList[i], properties[i]));
         } else {
-            files.push(ToJSON(itemList[i], properties[i]));
+            files.push(ObjectToJSON(itemList[i].targetObjects, properties[i]));
         }
     }
 

@@ -1,8 +1,6 @@
 import './styles/App.css';
 import { useState } from 'react';
-import ItemChange from './components/ItemComponent.jsx';
-import ProjectileChange from './components/ProjectileComponent.jsx';
-import NPCChange from './components/NPCComponent.jsx';
+import GeneralChange from './components/GeneralObjectChangeComponent.jsx';
 import RecipeChange from './components/RecipeComponent.jsx';
 import AddRecipe from './components/AddRecipeComponent.jsx';
 import Populate from './components/ChangeList.jsx';
@@ -14,6 +12,7 @@ export default function App() {
     const [properties, setProperties] = useState([]);
     const [itemList, setItemList] =  useState([]);
     const [componentType, setComponentType] = useState("Item");
+    const [status, setStatus] = useState(false);
 
     function addChange(componentType){
         let defaultValue;
@@ -56,7 +55,7 @@ export default function App() {
                 value: 1
             }]]);
         } else {
-            setItemList([...itemList, {source: "Terraria", name:defaultValue, component: componentType}]);
+            setItemList([...itemList, {component: componentType, targetObjects: [{source: "Terraria", name:defaultValue}]}]);
             setProperties([...properties, [{property: "Damage", operation: "+", value: 0}]]);
         }
         setOpenIndex(properties.length);
@@ -69,39 +68,9 @@ export default function App() {
             properties={properties} setProperties={setProperties}/>);
         if(i === openIndex){
             switch (itemList[i].component) {
-                case "Item":
-                    changes.push(<ItemChange 
-                        key={`o${i}`} 
-                        status={false} 
-                        index={i} 
-                        properties={properties} 
-                        setProperties={setProperties}
-                        itemList={itemList}
-                        setItemList={setItemList}/>);
-                break;
-            case "Projectile":
-                changes.push(<ProjectileChange 
-                    key={`o${i}`} 
-                    index={i} 
-                    properties={properties} 
-                    setProperties={setProperties}
-                    itemList={itemList}
-                    setItemList={setItemList}/>);
-                break;
-            case "NPC":
-                changes.push(<NPCChange 
-                    key={`o${i}`} 
-                    status={false} 
-                    index={i} 
-                    properties={properties} 
-                    setProperties={setProperties}
-                    itemList={itemList}
-                    setItemList={setItemList}/>);
-                break;
             case "Recipe":
                 changes.push(<RecipeChange 
                     key={`o${i}`} 
-                    status={false} 
                     index={i} 
                     properties={properties} 
                     setProperties={setProperties}
@@ -111,7 +80,6 @@ export default function App() {
             case "AddRecipe":
                 changes.push(<AddRecipe 
                     key={`o${i}`} 
-                    status={false} 
                     index={i} 
                     properties={properties} 
                     setProperties={setProperties}
@@ -119,14 +87,14 @@ export default function App() {
                     setItemList={setItemList}/>);
                 break;
             default:
-                changes.push(<ItemChange 
+                changes.push(<GeneralChange 
                     key={`o${i}`} 
-                    status={false} 
+                    calamityStatus={status} 
                     index={i} 
                     properties={properties} 
                     setProperties={setProperties}
-                    itemList={itemList}
-                    setItemList={setItemList}/>);
+                    objectList={itemList}
+                    setObjectList={setItemList}/>);
                 break;
             }          
         }
@@ -136,7 +104,6 @@ export default function App() {
         const {value} = e.target;
         setComponentType(value);
     }
-
     return (
         <div className="App">
             <header className="App-header">
@@ -156,6 +123,10 @@ export default function App() {
                 </select>
             </div>
             <button className="StickyButton" onClick={() => Download(itemList, properties)}>Export</button>
+            <div className="StatusBox">
+                <input type="checkbox" id="status" name="status" value="Status" onChange={()=>setStatus(status ? false : true)}/>
+                <label for="status">Calamity Enabled?</label>
+            </div>
         </div>
     );
 }

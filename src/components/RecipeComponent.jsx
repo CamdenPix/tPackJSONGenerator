@@ -91,7 +91,7 @@ function Property({index, propData, onChange, deleteElement}){
 }
 
 
-export default function RecipeComponent({status, index, properties, setProperties, itemList, setItemList}) {    
+export default function RecipeComponent({index, properties, setProperties, itemList, setItemList}) {    
 
     function addProperties() {
         const updateArray = [...properties];
