@@ -226,28 +226,28 @@ export default function Download(itemList, properties){
 
     const zip = new JSZip();
     for(let i = 0; i < itemList.length; i++){
-        let fileType = "";
+        let fileName = "";
         switch (itemList[i].component) {
             case "Item":
-                fileType = "itemmod";
+                fileName = `${itemList[i].component}_${itemList[i].targetObjects[0].name}.itemmod.json`;
                 break;
             case "Projectile":
-                fileType = "projectilemod";
+                fileName = `${itemList[i].component}_${itemList[i].targetObjects[0].name}.projectilemod.json`;
                 break;
             case "NPC":
-                fileType = "npcmod";
+                fileName = `${itemList[i].component}_${itemList[i].targetObjects[0].name}.npcmod.json`;
                 break;
             case "Recipe":
-                fileType = "recipemod";
+                fileName = `${itemList[i].component}_${itemList[i].name}.recipemod.json`;
                 break;
             case "AddRecipe":
-                fileType = "recipebuilder";
+                fileName = `${itemList[i].component}_${itemList[i].name}.recipebuilder.json`;
                 break;
             default:
-                fileType = "ERROR"
+                fileName = "ERROR"
                 break;
         }
-        zip.file(`${itemList[i].component}_${itemList[i].name}.${fileType}.json`, files[i]);
+        zip.file(fileName, files[i]);
     }
     zip.generateAsync({ type: "blob" }).then(function (content) {
         FileSaver.saveAs(content, "download.zip");
