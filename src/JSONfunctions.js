@@ -2,22 +2,6 @@ import JSZip from 'jszip';
 import FileSaver from 'file-saver';
 const CalamityProperties = ["MaxCharge", "ChargePerUse", "ChargePerAltUse", "DamageReduction"];
 
-//Item, NPC, and Projectile
-function ToJSON(item, propDataArr){
-    const changes = {};
-    changes[item.source] = {};
-    propDataArr.forEach(change => {
-        const { property, operation, value } = change;
-        changes[item.source][property] = `${operation}${value}`;
-    });
-
-    const jsonObject = {
-        Item: `${item.source}/${item.name}`,
-        Changes: changes
-    }
-
-    return JSON.stringify(jsonObject);
-}
 
 //Object list is the actual list passed in, not with what the component is
 function ObjectToJSON(objectList, propDataArr){
